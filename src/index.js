@@ -9,6 +9,10 @@
 const path = require('path');
 const fs = require('fs');
 
+
+var firebaseVersionInLockFile = require('firebase/app')
+console.log('Firebase Version',firebaseVersionInLockFile.SDK_VERSION);
+
 function endsWith(str, suffix) {
   return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
@@ -16,7 +20,7 @@ function endsWith(str, suffix) {
 function swTransformer(mode, path, content, userSWFilePath) {
   console.log(path);
   if (endsWith(path, 'firebase-messaging-sw.js')) {
-    const firebaseVersionInLockFile = require('firebase/package.json').version;
+
     content = content.replace(/FIREBASE_VERSION/g, firebaseVersionInLockFile);
 
     // add service worker for pwa mode
@@ -43,9 +47,10 @@ const extendWebpackForWeb = function (conf, mode, appDir) {
   );
   const userSWFilePath = path.join(
     appDir,
-    'src/public',
+    'src/assets',
     'firebase-messaging-sw.js'
   );
+  console.log('userSWFilePath', userSWFilePath)
 
   const copyPluginPatternOptions = [
     {
