@@ -5,7 +5,7 @@ Quasar Firebase Messaging App Extension
 ```bash
 yarn add firebase
 yarn add quasar-app-extension-firebase-messaging
-quasar ext invoke firebase-messaging
+quasar ext invoke @diadal/firebase-messaging
 ```
 
 # Setup
