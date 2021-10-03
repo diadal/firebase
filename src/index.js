@@ -20,8 +20,8 @@ function endsWith(str, suffix) {
 function swTransformer(mode, path, content, userSWFilePath) {
   console.log(path);
   if (endsWith(path, 'firebase-messaging-sw.js')) {
-
-    content = content.replace(/FIREBASE_VERSION/g, firebaseVersionInLockFile);
+    const FVersion = firebaseVersionInLockFile.SDK_VERSION;
+    content = content.replace(/FIREBASE_VERSION/g, FVersion);
 
     // add service worker for pwa mode
     if (mode === 'pwa') {
