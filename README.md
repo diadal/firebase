@@ -10,9 +10,14 @@ quasar ext invoke @diadal/firebase-messaging
 
 # Setup
 Create a file named `firebase-messaging-sw.js` in `src/assets`
-The package will concatenate the firebase imports at its start
+with below contents
 
 ```js
+import { initializeApp } from 'firebase/app';
+import { getMessaging, onBackgroundMessage } from 'firebase/messaging/sw';
+import { onMessage } from 'firebase/messaging';
+
+
 const firebaseConfig = {....};
 
 const app = initializeApp(firebaseConfig);
@@ -35,13 +40,4 @@ onBackgroundMessage(messaging, (payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-```
-
-Also, make the entry `firebase-messaging-sw.js` the entry service worker for your pwa
-```js
-// replace line
-register(process.env.SERVICE_WORKER_FILE, {
---->
-// by
-register('firebase-messaging-sw.js', {
 ```

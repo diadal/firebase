@@ -7,67 +7,19 @@
  */
 
 const path = require('path');
-const fs = require('fs');
 
-
-var firebaseVersionInLockFile = require('firebase/app')
-console.log('Firebase Version',firebaseVersionInLockFile.SDK_VERSION);
-
-function endsWith(str, suffix) {
-  return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
-
-function swTransformer(mode, path, content, userSWFilePath) {
-  console.log(path);
-  if (endsWith(path, 'firebase-messaging-sw.js')) {
-    const FVersion = firebaseVersionInLockFile.SDK_VERSION;
-    content = content.replace(/FIREBASE_VERSION/g, FVersion);
-
-    // add service worker for pwa mode
-    if (mode === 'pwa') {
-      const scripts = [];
-      scripts.unshift('/service-worker.js?' + Date.now());
-      content += `importScripts(${scripts
-        .map((i) => `'${i}'`)
-        .join(', ')})\r\n`;
-    }
-
-    content += fs.readFileSync(userSWFilePath).toString();
-  }
-
-  return content;
-}
-
-const extendWebpackForWeb = function (conf, mode, appDir) {
-  const CopyPlugin = require('copy-webpack-plugin');
-  const copyPluginVersion = require('copy-webpack-plugin/package.json').version;
-
-  console.log(
-    ` App Extension (firebase): Configure webpack to copy service workers to root directory`
-  );
+const extendWebpackForWeb2 = function (appDir, conf) {
   const userSWFilePath = path.join(
     appDir,
     'src/assets',
     'firebase-messaging-sw.js'
   );
-  console.log('userSWFilePath', userSWFilePath)
 
-  const copyPluginPatternOptions = [
-    {
-      from: path.join(__dirname, 'templates', 'firebase-messaging-sw.js'),
-      to: '.',
-      transform: (content, path) =>
-        swTransformer(mode, path, content.toString(), userSWFilePath),
-    },
-  ];
+  const fireSw =  { import: userSWFilePath, filename: 'firebase-messaging-sw.js' };
+  const postentry = {...conf.entry, fireSw}
+  conf.entry = postentry
 
-  if (parseInt(copyPluginVersion) >= 6) {
-    copyPlugin = new CopyPlugin({ patterns: copyPluginPatternOptions });
-  } else {
-    copyPlugin = new CopyPlugin(copyPluginPatternOptions);
-  }
-  conf.plugins.push(copyPlugin);
-};
+}
 
 module.exports = function (api) {
   api.compatibleWith('@quasar/app', '^1.0.0 || ^2.0.0 || ^3.0.0');
@@ -76,6 +28,9 @@ module.exports = function (api) {
   const appDir = api.appDir;
 
   if (['pwa', 'spa', 'ssr'].includes(modeName)) {
-    api.extendWebpack((conf) => extendWebpackForWeb(conf, modeName, appDir));
+    api.extendWebpack((conf) => extendWebpackForWeb2(appDir, conf));
+
   }
+
+
 };
