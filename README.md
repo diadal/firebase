@@ -4,12 +4,12 @@ Quasar Firebase Messaging App Extension
 # Install
 ```bash
 yarn add firebase
-yarn add quasar-app-extension-firebase-messaging
+yarn add @diadal/quasar-app-extension-firebase-messaging
 quasar ext invoke @diadal/firebase-messaging
 ```
 
 # Setup
-Create a file named `firebase-messaging-sw.js` in `src-pwa`
+Create a file named `firebase-messaging-sw.js` in `src/assets`
 The package will concatenate the firebase imports at its start
 
 ```js
