@@ -1,6 +1,6 @@
 {
   "name": "@diadal/quasar-app-extension-firebase-messaging",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "Sets up FCM service worker for quasar applications",
   "author": "Diadal <info@diadal.com.ng>",
   "license": "MIT",
@@ -32,5 +32,8 @@
     "vue",
     "vue3",
     "vue.js"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
